@@ -26,7 +26,7 @@ func main() {
 			ID := strings.SplitN(pair[0], "_", 3)
 			PORT := os.Getenv("TCPHEALTH_PORT_" + ID[2])
 			addr := checkIPAddress(pair[1])
-			fmt.Println("-- Attempting connection to ", pair[1], " on ", PORT, " --")
+			//fmt.Println("-- Attempting connection to ", pair[1], " on ", PORT, " --")
 			raw_connect(pair[1], addr, PORT)
 		}
 	}
@@ -34,12 +34,12 @@ func main() {
 
 func checkIPAddress(ip string) (addr string) {
 	if net.ParseIP(ip) == nil {
-		fmt.Printf("Host: %s - is NOT an IP address\n", ip)
+		//fmt.Printf("Host: %s - is NOT an IP address\n", ip)
 		addr, err := net.LookupIP(ip)
 		if err != nil {
-			fmt.Println("Host does not resolve properly")
+			fmt.Println("Host", ip, "does not resolve properly")
 		} else {
-			fmt.Println("Host "+ip+" resolves to: ", addr)
+			//fmt.Println("Host "+ip+" resolves to: ", addr)
 			return addr[0].String()
 		}
 	} else {
