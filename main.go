@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+//connect_timeout represented like 2s (2 seconds) or like 30ms (30 milliseconds)
+var connect_timeout, _ = time.ParseDuration(os.Getenv("TCPHEALTH_CONNECT_TIMEOUT"))
+
+//run_interval := os.Getenv("TCPHEALTH_INTERVAL")
+
 func main() {
 	// set the env var for testing
 	//os.Setenv("TCPHEALTH_HOST_01", "www.google.com")
@@ -45,7 +50,8 @@ func checkIPAddress(ip string) (addr string) {
 }
 
 func raw_connect(host string, port string) {
-	timeout := time.Second
+	//fmt.Println("Timeout is ", connect_timeout)
+	timeout := time.Duration(connect_timeout)
 	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
 	if err != nil {
 		fmt.Println("Connecting error:", err)
