@@ -26,8 +26,8 @@ func main() {
 			ID := strings.SplitN(pair[0], "_", 3)
 			PORT := os.Getenv("TCPHEALTH_PORT_" + ID[2])
 			addr := checkIPAddress(pair[1])
-			fmt.Println("-- Attempting connection to " + pair[1] + "on " + PORT + " --")
-			raw_connect(addr, PORT)
+			fmt.Println("-- Attempting connection to ", pair[1], " on ", PORT, " --")
+			raw_connect(pair[1], addr, PORT)
 		}
 	}
 }
@@ -44,20 +44,20 @@ func checkIPAddress(ip string) (addr string) {
 		}
 	} else {
 		fmt.Printf("Host: %s - is an IP address\n", ip)
-		return "%s"
+		return ip
 	}
 	return
 }
 
-func raw_connect(host string, port string) {
+func raw_connect(host string, addr string, port string) {
 	//fmt.Println("Timeout is ", connect_timeout)
 	timeout := time.Duration(connect_timeout)
-	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
+	conn, err := net.DialTimeout("tcp", net.JoinHostPort(addr, port), timeout)
 	if err != nil {
-		fmt.Println("Connecting error:", err)
+		fmt.Println("Failure connecting to ", host, " - ", net.JoinHostPort(addr, port), "within", timeout, err)
 	}
 	if conn != nil {
 		defer conn.Close()
-		fmt.Println("Successfully opened TCP connection", net.JoinHostPort(host, port))
+		fmt.Println("Successfully opened TCP connection to ", host, " - ", net.JoinHostPort(addr, port))
 	}
 }
