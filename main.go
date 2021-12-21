@@ -9,11 +9,33 @@ import (
 )
 
 //connect_timeout represented like 2s (2 seconds) or like 30ms (30 milliseconds)
-var connect_timeout, _ = time.ParseDuration(os.Getenv("TCPHEALTH_CONNECT_TIMEOUT"))
+var connect_timeout, _ = time.ParseDuration(getEnv("TCPHEALTH_CONNECT_TIMEOUT", "1s"))
 
-//run_interval := os.Getenv("TCPHEALTH_INTERVAL")
+//run_interval can be represented the same way - but never shorter than connect_interval
+var run_interval, _ = time.ParseDuration(getEnv("TCPHEALTH_RUN_INTERVAL", "10s"))
+
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
 
 func main() {
+	if connect_timeout > run_interval {
+		fmt.Fprintf(os.Stderr, "Connection timeout is too high\n")
+		os.Exit(1)
+	}
+	dispatcherTicker := time.NewTicker(time.Duration(run_interval))
+	for {
+		select {
+		case <-dispatcherTicker.C:
+			dispatcher()
+		}
+	}
+}
+
+func dispatcher() {
 	// set the env var for testing
 	//os.Setenv("TCPHEALTH_HOST_01", "www.google.com")
 	//os.Setenv("TCPHEALTH_PORT_01", "80")
@@ -50,7 +72,7 @@ func checkIPAddress(ip string) (addr string) {
 }
 
 func raw_connect(host string, addr string, port string) {
-	//fmt.Println("Timeout is ", connect_timeout)
+	fmt.Println("Connection timeout is ", connect_timeout)
 	timeout := time.Duration(connect_timeout)
 	conn, err := net.DialTimeout("tcp", net.JoinHostPort(addr, port), timeout)
 	if err != nil {
