@@ -18,6 +18,7 @@ TCPHEALTH_PORT_01 - the TCP port on that host (or service)
 ...you should be able to run as many number of checks as needed by incrementing the number above...
 
 TCPHEALTH_RUN_INTERVAL - how often you'd like the check performed, measured in golang time.ParseDuration()
+
 TCPHEALTH_CONNECT_TIMEOUT - how long the TCP connection attempt should try before failing
 
 LOG_LEVEL=DEBUG - debug logging turned on
