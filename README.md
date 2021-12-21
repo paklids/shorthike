@@ -22,3 +22,7 @@ TCPHEALTH_RUN_INTERVAL - how often you'd like the check performed, measured in g
 TCPHEALTH_CONNECT_TIMEOUT - how long the TCP connection attempt should try before failing
 
 LOG_LEVEL=DEBUG - debug logging turned on
+
+Example:
+
+`TCPHEALTH_HOST_01=www.google.com TCPHEALTH_PORT_01=80 TCPHEALTH_CONNECT_TIMEOUT=3s TCPHEALTH_RUN_INTERVAL=15s LOG_LEVEL=DEBUG go run main.go`
