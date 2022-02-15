@@ -79,10 +79,12 @@ func raw_connect(host string, addr string, port string) {
 	timeout := time.Duration(connect_timeout)
 	conn, err := net.DialTimeout("tcp", net.JoinHostPort(addr, port), timeout)
 	if err != nil {
-		fmt.Println("Failure connecting to ", host, " - ", net.JoinHostPort(addr, port), "within", timeout, err)
+		t := time.Now()
+		fmt.Println(t.String(), "Failure connecting to ", host, " - ", net.JoinHostPort(addr, port), "within", timeout, err)
 	}
 	if conn != nil {
 		defer conn.Close()
-		fmt.Println("Successfully opened TCP connection to ", host, " - ", net.JoinHostPort(addr, port))
+		t := time.Now()
+		fmt.Println(t.String(), "Successfully opened TCP connection to ", host, " - ", net.JoinHostPort(addr, port))
 	}
 }
